@@ -1,3 +1,7 @@
+/*
+to sort an array with minimum number of sort
+*/
+
 import Foundation
 func countingSort(array: [Int]) -> [Int] {
     var storedArray = Array(0...array.count)
