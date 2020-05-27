@@ -13,7 +13,7 @@ func selectionSort (array: [Int]) -> [Int] {
         if array[index] != tempArrayMinValue {
             let tempValue = array[index]
             array[index] = tempArrayMinValue
-            array[(tempArray.index(of:tempArrayMinValue) as! Int + index)] = tempValue
+            array[(tempArray.index(of:tempArrayMinValue) as! Int )] = tempValue
             swapCounter += 1
         }
     }
@@ -31,4 +31,6 @@ func minimumDifference (array: [Int], indexNumber: Int) -> Int {
     return minimumDifference
 }
 
-print(minimumDifference (array: (selectionSort(array: [1,2,3,4])), indexNumber: 3))
+print(minimumDifference (array: (selectionSort(array: [1,4,2,3,4,2,2,2,2])), indexNumber: 3))
+
+
