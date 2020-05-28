@@ -4,7 +4,7 @@ to sort an array with minimum number of sort
 import Foundation
 func countingSort(array: [Int]) -> [Int] {
     var array = array
-    var storedArray = Array(1...array.count)
+    var sortedArray = Array(1...array.count)
     var indexCount = [Int]()
     let indexRange = Array((array.min() ?? 0)...(array.max() ?? 0))
     var sumCount = [Int]()
@@ -24,13 +24,25 @@ func countingSort(array: [Int]) -> [Int] {
     for arrayValueAndIndex in array {
         var temp = sumCount[(indexRange.index(of:  arrayValueAndIndex) ?? 0)]
         if array[temp - 1] !=  arrayValueAndIndex {
-             storedArray[temp - 1]  =  arrayValueAndIndex
+             sortedArray[temp - 1]  =  arrayValueAndIndex
              swapCount += 1
         }
         sumCount[(indexRange.index(of:  arrayValueAndIndex) ?? 0)] = (sumCount[(indexRange.index(of:  arrayValueAndIndex) ?? 0)]) - 1
     }
     print(swapCount)
-    return storedArray
-
+    print(sortedArray)
+    return sortedArray
 }
-print(countingSort(array: [5,4,3,2,1]))
+
+func minimumDifference (array: [Int], indexNumber: Int) -> Int {
+    var minimumDifference = 0
+    if array.count > indexNumber {
+        for index in 0..<indexNumber {
+            minimumDifference = minimumDifference + (array[index + 1] - array[index] )
+        }
+    }
+    return minimumDifference
+}
+
+print(minimumDifference (array: (countingSort(array: [1,2,3,4])), indexNumber: 3))
+
