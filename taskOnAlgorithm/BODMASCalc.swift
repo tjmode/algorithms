@@ -98,23 +98,20 @@ func ofProblem (expression: String) -> String{
     }
     return String(expressionArray)
 }
-var expression = "1*8"
+var expression = "(111+1)*1234+(1111)+1*576"
 var answer = ""
 expression = ofProblem(expression: expression)
 var expressionArray = Array(expression)
 var openBracketCount = (expressionArray.lazy.filter{$0 == ")"}.count)
 if openBracketCount == (expressionArray.lazy.filter{$0 == "("}.count) {
     if openBracketCount == 0 {
-        print(odmasChecker(expression: expression))
+       print(odmasChecker(expression: expression))
     } else {
-        for i in 0..<openBracketCount  {
+        for i in 0..<openBracketCount + 1{
             expressionArray = Array(expression)
-            openBracketCount -= 1
+            if expressionArray.contains("(") {
             var openedBracketIndex = -1
             var closedBracketIndex = -1
-            if openBracketCount == 0 {
-              print(odmasChecker(expression: expression))
-            } else {
                 outerLoop: for j in 0..<expressionArray.count {
                     if expressionArray[j] == "(" {
                         openedBracketIndex = j
@@ -122,15 +119,15 @@ if openBracketCount == (expressionArray.lazy.filter{$0 == "("}.count) {
                     if expressionArray[j] == ")" {
                         closedBracketIndex = j
                        let expressionToCalculate = String(expressionArray[(openedBracketIndex + 1)..<(closedBracketIndex)])
-                        print(expressionToCalculate)
                        answer = odmasChecker(expression: expressionToCalculate)
                        expression = expression.replacingOccurrences(of: "(\(expressionToCalculate))", with: "\(answer)")
                         break outerLoop
                     }
                 }
+            } else {
+                answer = odmasChecker(expression: expression)
             }
         }
+        }
+         print(answer)
     }
-}
-
-
