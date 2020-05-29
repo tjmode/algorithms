@@ -15,7 +15,7 @@ func division(number1: Int, number2: Int) -> Int {
     return number1 / number2
 }
 func odmasChecker(expression: String) -> String {
-    var expression = "1"
+    var expression = expression
     var answer = 0
     let numberArray = expression.components(separatedBy: CharacterSet.decimalDigits.inverted)
     var number1 = [Int]()
@@ -98,7 +98,7 @@ func ofProblem (expression: String) -> String{
     }
     return String(expressionArray)
 }
-var expression = "(1)"
+var expression = "1*8"
 var answer = ""
 expression = ofProblem(expression: expression)
 var expressionArray = Array(expression)
