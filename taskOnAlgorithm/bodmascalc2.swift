@@ -3,13 +3,13 @@ import Foundation
 Input will be string (e.g., "(2*39)+(63*58)"
 output: 3732.0
 */
-
 extension String {
     func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
         guard let range = self.range(of: target) else { return self }
         return self.replacingCharacters(in: range, with: replacement)
     }
 }
+
 func ofProblem (expression: String) -> String{
     var expression = expression.replacingOccurrences(of:  " ", with: "")
     expression = expression.replacingOccurrences(of:  ")(", with: ")*(")
@@ -25,6 +25,7 @@ func ofProblem (expression: String) -> String{
     }
     return expression
 }
+
 func calculation(operators: String, firstOperand: Double, secondOperand: Double) -> Double {
     switch operators {
         case "+" :
@@ -56,11 +57,12 @@ func postfixEvaluation (postfixs: [String]) -> Double {
                stack.insert(answer, at: stack.endIndex)
              }
        } else {
-           stack.append(Double(expression) as! Double)
+         stack.append(Double(expression) as! Double)
        }
    }
     return stack[0]
 }
+
 func infixToPostfix (expressionArray: [String]) -> [String] {
     let symbolDic = ["+": 1, "-": 1, "*": 2, "/": 2]
     var stack = [String]()
@@ -136,17 +138,20 @@ func infixToPostfix (expressionArray: [String]) -> [String] {
     }
     return operators + stack
 }
+
 func floatProblem (expressionArray: [String]) -> [String] {
     var expressionArray = expressionArray
     for eachDot in 0..<(expressionArray.lazy.filter{$0 == "."}.count){
        let indexOfPoint = expressionArray.index(of: ".") ?? 1
-        let floatValue = "\(expressionArray[indexOfPoint - 1]) \(expressionArray[indexOfPoint]) \(expressionArray[indexOfPoint + 1])"
+        var floatValue = "\(expressionArray[indexOfPoint - 1]) \(expressionArray[indexOfPoint]) \(expressionArray[indexOfPoint + 1])"
+        floatValue = floatValue.replacingOccurrences(of:  " ", with: "")
         expressionArray[indexOfPoint - 1] = floatValue
         expressionArray.remove(at: indexOfPoint)
         expressionArray.remove(at: indexOfPoint)
     }
     return expressionArray
 }
+
 func decimalNumberSpliter (expression: String) -> ([Int],String) {
     var tempExpression = expression
     var numbers = [Int]()
@@ -159,6 +164,7 @@ func decimalNumberSpliter (expression: String) -> ([Int],String) {
     }
     return (numbers,  tempExpression)
 }
+
 func expressionArrayMaker (numbers: [Int], tempExpression: String) -> [String] {
     var numbers = numbers
     let tempExpressionArray = Array(tempExpression)
@@ -173,7 +179,7 @@ func expressionArrayMaker (numbers: [Int], tempExpression: String) -> [String] {
     }
     return expressionArray
 }
-var expression = "(10+52)*((5-2(2))+9-33)"
+var expression = "12+5.1"
 expression = ofProblem (expression: expression)
 let answer = decimalNumberSpliter(expression: expression)
 var expressionArray = expressionArrayMaker( numbers: answer.0, tempExpression: answer.1)
