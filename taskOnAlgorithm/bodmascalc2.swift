@@ -3,6 +3,7 @@ import Foundation
 Input will be string (e.g., "(2*39)+(63*58)"
 output: 3732.0
 */
+var expression = "(-5+5)"
 
 extension String {
     func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
@@ -43,11 +44,12 @@ func calculation(operators: String, firstOperand: Double, secondOperand: Double)
 }
 
 func postfixEvaluation (postfixs: [String]) -> Double {
-    let symbolDic = ["+": 0, "-": 0, "*": 1, "/": 1]
+    let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0]
     var stack = [Double]()
     for expression in postfixs {
         if symbolDic[expression] != nil {
             if stack.count == 1 {
+                print(stack[stack.count - 1])
                 let answer = calculation(operators: expression , firstOperand: symbolDic[expression] as! Double, secondOperand: stack[stack.count - 1]) 
                stack.removeLast()
                stack.insert(answer, at: stack.endIndex)
@@ -110,16 +112,17 @@ func infixToPostfix (expressionArray: [String]) -> [String] {
                         stackIndex += 1
                         lastWieght = symbolDic[each] as! Int
                         doneMessage = 0
-                    } else {
+                    } else if  currectWieght == lastWieght || currectWieght < lastWieght {
                         if stack[stack.count - 1] == "(" {
                             stack.append(each)
                             stackIndex += 1
                             lastWieght = -1
                             doneMessage = 0
                         } else {
-                            let transformers = stack.removeLast()
-                            stackIndex -= 1
-                            operators.append(transformers)
+                            let transfer = stack.removeLast()
+                            operators.append(transfer)
+                            stack.append(each)
+                            lastWieght = symbolDic[each] as! Int
                             if stack.count != 0 {
                                 if stack[stack.count - 1] != "(" {
                                     lastWieght = symbolDic[each] as! Int
@@ -129,6 +132,7 @@ func infixToPostfix (expressionArray: [String]) -> [String] {
                             } else {
                                 lastWieght = -1 
                             }
+                            doneMessage = 0
                         }
                     }
                 }
@@ -137,6 +141,7 @@ func infixToPostfix (expressionArray: [String]) -> [String] {
             operators.append(each)
         }
     }
+    stack = stack.reversed()
     return operators + stack
 }
 
@@ -155,17 +160,18 @@ func floatProblem (expressionArray: [String]) -> [String] {
 
 func decimalNumberSpliter (expression: String) -> ([String],String) {
     var tempExpression = expression
-    var numbers = [Int]()
+    var numbers = [String]()
     let decimalNumbers = expression.components(separatedBy: CharacterSet.decimalDigits.inverted)
     var indexOfDecimalNumbers = 0
     for each in decimalNumbers {
         if let number = Int(each) {
-            numbers.append(number)
+            numbers.append(String(number))
             tempExpression = tempExpression.replacingFirstOccurrence(of: decimalNumbers[indexOfDecimalNumbers], with: "1")
             indexOfDecimalNumbers += 1
         }
+
     }
-    return (decimalNumbers,  tempExpression)
+    return (numbers,  tempExpression)
 }
 
 func expressionArrayMaker (numbers: [String], tempExpression: String) -> [String] {
@@ -183,10 +189,10 @@ func expressionArrayMaker (numbers: [String], tempExpression: String) -> [String
     return expressionArray
 }
 
-var expression = "12+5.01"
 expression = ofProblem (expression: expression)
 let answer = decimalNumberSpliter(expression: expression)
 var expressionArray = expressionArrayMaker( numbers: answer.0, tempExpression: answer.1)
 expressionArray = floatProblem(expressionArray: expressionArray)
 let postfixs = infixToPostfix(expressionArray: expressionArray)
+print(postfixs)
 print(postfixEvaluation (postfixs: postfixs))
