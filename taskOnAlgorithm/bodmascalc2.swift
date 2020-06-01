@@ -1,4 +1,9 @@
 import Foundation
+/*Create a simple calculator and calculate the values based on the order of precedence
+Input will be string (e.g., "(2*39)+(63*58)"
+output: 3732.0
+*/
+
 extension String {
     func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
         guard let range = self.range(of: target) else { return self }
