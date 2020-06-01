@@ -1,9 +1,9 @@
 import Foundation
-/*Create a simple calculator and calculate the values based on the order of precedence
+/*
+Create a simple calculator and calculate the values based on the order of precedence
 Input will be string (e.g., "(2*39)+(63*58)"
 output: 3732.0 
 */
-var expression = "(-5+5)"
 
 extension String {
     func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
@@ -49,7 +49,6 @@ func postfixEvaluation (postfixs: [String]) -> Double {
     for expression in postfixs {
         if symbolDic[expression] != nil {
             if stack.count == 1 {
-                print(stack[stack.count - 1])
                 let answer = calculation(operators: expression , firstOperand: symbolDic[expression] as! Double, secondOperand: stack[stack.count - 1]) 
                stack.removeLast()
                stack.insert(answer, at: stack.endIndex)
@@ -166,7 +165,7 @@ func decimalNumberSpliter (expression: String) -> ([String],String) {
     for each in decimalNumbers {
         if let number = Int(each) {
             numbers.append(String(number))
-            tempExpression = tempExpression.replacingFirstOccurrence(of: decimalNumbers[indexOfDecimalNumbers], with: "1")
+            tempExpression = tempExpression.replacingFirstOccurrence(of: "\(numbers)", with: "1")
             indexOfDecimalNumbers += 1
         }
 
@@ -189,10 +188,13 @@ func expressionArrayMaker (numbers: [String], tempExpression: String) -> [String
     return expressionArray
 }
 
-expression = ofProblem (expression: expression)
-let answer = decimalNumberSpliter(expression: expression)
-var expressionArray = expressionArrayMaker( numbers: answer.0, tempExpression: answer.1)
-expressionArray = floatProblem(expressionArray: expressionArray)
-let postfixs = infixToPostfix(expressionArray: expressionArray)
-print(postfixs)
-print(postfixEvaluation (postfixs: postfixs))
+func calculator (expression: String) -> Double {
+    let expression = ofProblem (expression: expression)
+    let answer = decimalNumberSpliter(expression: expression)
+    var expressionArray = expressionArrayMaker( numbers: answer.0, tempExpression: answer.1)
+    expressionArray = floatProblem(expressionArray: expressionArray)
+    let postfixs = infixToPostfix(expressionArray: expressionArray)
+    return postfixEvaluation (postfixs: postfixs)
+}
+print(calculator(expression: "5*5"))
+
