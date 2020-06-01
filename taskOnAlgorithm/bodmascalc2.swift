@@ -1,7 +1,7 @@
 import Foundation
 /*Create a simple calculator and calculate the values based on the order of precedence
 Input will be string (e.g., "(2*39)+(63*58)"
-output: 3732.0
+output: 3732.0 
 */
 var expression = "(-5+5)"
 
