@@ -3,6 +3,7 @@ import Foundation
 Input will be string (e.g., "(2*39)+(63*58)"
 output: 3732.0
 */
+
 extension String {
     func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
         guard let range = self.range(of: target) else { return self }
@@ -152,20 +153,22 @@ func floatProblem (expressionArray: [String]) -> [String] {
     return expressionArray
 }
 
-func decimalNumberSpliter (expression: String) -> ([Int],String) {
+func decimalNumberSpliter (expression: String) -> ([String],String) {
     var tempExpression = expression
     var numbers = [Int]()
     let decimalNumbers = expression.components(separatedBy: CharacterSet.decimalDigits.inverted)
+    var indexOfDecimalNumbers = 0
     for each in decimalNumbers {
         if let number = Int(each) {
             numbers.append(number)
-            tempExpression = tempExpression.replacingFirstOccurrence(of: "\(number)", with: "1")
+            tempExpression = tempExpression.replacingFirstOccurrence(of: decimalNumbers[indexOfDecimalNumbers], with: "1")
+            indexOfDecimalNumbers += 1
         }
     }
-    return (numbers,  tempExpression)
+    return (decimalNumbers,  tempExpression)
 }
 
-func expressionArrayMaker (numbers: [Int], tempExpression: String) -> [String] {
+func expressionArrayMaker (numbers: [String], tempExpression: String) -> [String] {
     var numbers = numbers
     let tempExpressionArray = Array(tempExpression)
     var expressionArray = [String]()
@@ -179,7 +182,8 @@ func expressionArrayMaker (numbers: [Int], tempExpression: String) -> [String] {
     }
     return expressionArray
 }
-var expression = "12+5.1"
+
+var expression = "12+5.01"
 expression = ofProblem (expression: expression)
 let answer = decimalNumberSpliter(expression: expression)
 var expressionArray = expressionArrayMaker( numbers: answer.0, tempExpression: answer.1)
