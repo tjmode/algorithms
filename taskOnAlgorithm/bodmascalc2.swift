@@ -4,6 +4,7 @@ Create a simple calculator and calculate the values based on the order of preced
 Input will be string (e.g., "(2*39)+(63*58)"
 output: 3732.0 
 */
+let expression = "(1+1)(3+2)"
 
 extension String {
     func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
@@ -12,7 +13,7 @@ extension String {
     }
 }
 
-func ofProblem (expression: String) -> String{
+func bracketToMultiplication (expression: String) -> String{
     var expression = expression.replacingOccurrences(of:  " ", with: "")
     expression = expression.replacingOccurrences(of:  ")(", with: ")*(")
     var tempCatch = "w"
@@ -28,7 +29,7 @@ func ofProblem (expression: String) -> String{
     return expression
 }
 
-func calculation(operators: String, firstOperand: Double, secondOperand: Double) -> Double {
+func calculationForOperator(operators: String, firstOperand: Double, secondOperand: Double) -> Double {
     switch operators {
         case "+" :
             return firstOperand + secondOperand
@@ -43,17 +44,17 @@ func calculation(operators: String, firstOperand: Double, secondOperand: Double)
     }
 }
 
-func postfixEvaluation (postfixs: [String]) -> Double {
+func postfixEvaluateValue (postfixsArray: [String]) -> Double {
     let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0]
     var stack = [Double]()
-    for expression in postfixs {
+    for expression in postfixsArray {
         if symbolDic[expression] != nil {
             if stack.count == 1 {
-                let answer = calculation(operators: expression , firstOperand: symbolDic[expression] as! Double, secondOperand: stack[stack.count - 1]) 
+                let answer = calculationForOperator(operators: expression , firstOperand: symbolDic[expression] as! Double, secondOperand: stack[stack.count - 1]) 
                stack.removeLast()
                stack.insert(answer, at: stack.endIndex)
              } else {
-                let answer = calculation(operators: expression , firstOperand: stack[stack.count - 2], secondOperand: stack[stack.count - 1])
+                let answer = calculationForOperator(operators: expression , firstOperand: stack[stack.count - 2], secondOperand: stack[stack.count - 1])
                stack.removeLast()
                stack.removeLast()
                stack.insert(answer, at: stack.endIndex)
@@ -65,7 +66,7 @@ func postfixEvaluation (postfixs: [String]) -> Double {
     return stack[0]
 }
 
-func infixToPostfix (expressionArray: [String]) -> [String] {
+func infixToPostfixArray (expressionArray: [String]) -> [String] {
     let symbolDic = ["+": 1, "-": 1, "*": 2, "/": 2]
     var stack = [String]()
     var operators = [String]()
@@ -144,7 +145,7 @@ func infixToPostfix (expressionArray: [String]) -> [String] {
     return operators + stack
 }
 
-func floatProblem (expressionArray: [String]) -> [String] {
+func floatMergingInExpressionArray (expressionArray: [String]) -> [String] {
     var expressionArray = expressionArray
     for eachDot in 0..<(expressionArray.lazy.filter{$0 == "."}.count){
        let indexOfPoint = expressionArray.index(of: ".") ?? 1
@@ -157,7 +158,7 @@ func floatProblem (expressionArray: [String]) -> [String] {
     return expressionArray
 }
 
-func decimalNumberSpliter (expression: String) -> ([String],String) {
+func splitingExpressionIntoNumbersAndSymbols (expression: String) -> ([String],String) {
     var tempExpression = expression
     var numbers = [String]()
     let decimalNumbers = expression.components(separatedBy: CharacterSet.decimalDigits.inverted)
@@ -173,7 +174,7 @@ func decimalNumberSpliter (expression: String) -> ([String],String) {
     return (numbers,  tempExpression)
 }
 
-func expressionArrayMaker (numbers: [String], tempExpression: String) -> [String] {
+func convertExpressionArrayFromNumbersAndSymbols (numbers: [String], tempExpression: String) -> [String] {
     var numbers = numbers
     let tempExpressionArray = Array(tempExpression)
     var expressionArray = [String]()
@@ -188,12 +189,12 @@ func expressionArrayMaker (numbers: [String], tempExpression: String) -> [String
     return expressionArray
 }
 
-func calculator (expression: String) -> Double {
-    let expression = ofProblem (expression: expression)
-    let answer = decimalNumberSpliter(expression: expression)
-    var expressionArray = expressionArrayMaker( numbers: answer.0, tempExpression: answer.1)
-    expressionArray = floatProblem(expressionArray: expressionArray)
-    let postfixs = infixToPostfix(expressionArray: expressionArray)
-    return postfixEvaluation (postfixs: postfixs)
+func calculateExpression (expression: String) -> Double {
+    let expression = bracketToMultiplication (expression: expression)
+    let answer = splitingExpressionIntoNumbersAndSymbols(expression: expression)
+    var expressionArray = convertExpressionArrayFromNumbersAndSymbols( numbers: answer.0, tempExpression: answer.1)
+    expressionArray = floatMergingInExpressionArray(expressionArray: expressionArray)
+    let postfixsArray = infixToPostfixArray(expressionArray: expressionArray)
+    return postfixEvaluateValue (postfixsArray: postfixsArray)
 }
-print(calculator(expression: "1+22.1"))
+print(calculateExpression(expression: expression))
