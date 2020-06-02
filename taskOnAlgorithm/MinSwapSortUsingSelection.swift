@@ -5,13 +5,12 @@ output: Sorted arrayOfElements with minimum swap count, sum of difference of val
 */
 
 import Foundation
-func arrayOfElementsSortingWithMinimumSwap (arrayOfElements: [Int]) -> [Int] {
+func sortingarrayOfElementsWithMinimumSwap (arrayOfElements: [Int]) -> [Int] {
     var arrayOfElements = arrayOfElements
     var swapCounter = 0
-    var temparrayOfElementsMinValue = 0
     for index in 0..<arrayOfElements.count {
         let temparrayOfElements = arrayOfElements[index...(arrayOfElements.count - 1)]
-        temparrayOfElementsMinValue = temparrayOfElements.min() as! Int
+        let temparrayOfElementsMinValue = temparrayOfElements.min() as! Int
         if arrayOfElements[index] != temparrayOfElementsMinValue {
             let tempValue = arrayOfElements[index]
             arrayOfElements[index] = temparrayOfElementsMinValue
@@ -21,7 +20,7 @@ func arrayOfElementsSortingWithMinimumSwap (arrayOfElements: [Int]) -> [Int] {
     }
     return arrayOfElements
 }
-func sumOfMinimumDiferenceForGivenRange (arrayOfElements: [Int], indexNumber: Int) -> Int {
+func sumOfDiferenceBetweenGivenRange (arrayOfElements: [Int], indexNumber: Int) -> Int {
     var sumOfDiference = 0
     if arrayOfElements.count > indexNumber {
         for index in 0..<indexNumber {
@@ -31,6 +30,6 @@ func sumOfMinimumDiferenceForGivenRange (arrayOfElements: [Int], indexNumber: In
     return sumOfDiference
 }
 
-var sortedArrayOfElements = arrayOfElementsSortingWithMinimumSwap(arrayOfElements: [1,2,1,9])
+var sortedArrayOfElements = sortingarrayOfElementsWithMinimumSwap(arrayOfElements: [1,2,1,9])
 print(sortedArrayOfElements)
-sumOfMinimumDiferenceForGivenRange(arrayOfElements: sortedArrayOfElements, indexNumber: 2)
+sumOfDiferenceBetweenGivenRange(arrayOfElements: sortedArrayOfElements, indexNumber: 2)
