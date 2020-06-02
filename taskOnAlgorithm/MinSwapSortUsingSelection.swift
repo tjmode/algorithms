@@ -10,11 +10,11 @@ func sortingarrayOfElementsWithMinimumSwap (arrayOfElements: [Int]) -> [Int] {
     var swapCounter = 0
     for index in 0..<arrayOfElements.count {
         let temparrayOfElements = arrayOfElements[index...(arrayOfElements.count - 1)]
-        let temparrayOfElementsMinValue = temparrayOfElements.min() as! Int
-        if arrayOfElements[index] != temparrayOfElementsMinValue {
+        let minValueOfTempArrayOfElements = temparrayOfElements.min() as! Int
+        if arrayOfElements[index] != minValueOfTempArrayOfElements {
             let tempValue = arrayOfElements[index]
-            arrayOfElements[index] = temparrayOfElementsMinValue
-            arrayOfElements[(temparrayOfElements.index(of:temparrayOfElementsMinValue) as! Int )] = tempValue
+            arrayOfElements[index] = minValueOfTempArrayOfElements
+            arrayOfElements[(temparrayOfElements.index(of:minValueOfTempArrayOfElements) as! Int )] = tempValue
             swapCounter += 1
         }
     }
