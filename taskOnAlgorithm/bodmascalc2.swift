@@ -165,7 +165,7 @@ func decimalNumberSpliter (expression: String) -> ([String],String) {
     for each in decimalNumbers {
         if let number = Int(each) {
             numbers.append(String(number))
-            tempExpression = tempExpression.replacingFirstOccurrence(of: "\(numbers)", with: "1")
+            tempExpression = tempExpression.replacingFirstOccurrence(of: "\(number)", with: "1")
             indexOfDecimalNumbers += 1
         }
 
@@ -196,5 +196,4 @@ func calculator (expression: String) -> Double {
     let postfixs = infixToPostfix(expressionArray: expressionArray)
     return postfixEvaluation (postfixs: postfixs)
 }
-print(calculator(expression: "5*5"))
-
+print(calculator(expression: "1+22.1"))
