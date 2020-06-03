@@ -17,7 +17,7 @@ func largeAndSmallNumberFinder(numberOne: Int , numberTwo: Int) -> Int {
 
 func lcmCalculation (largeNumber: Int, smallNumber: Int) -> Int {
     var largeNumber = largeNumber
-    if (largeNumber % largeNumber == 0) , (smallNumber%smallNumber == 0) {
+    if (largeNumber % largeNumber == 0) , (smallNumber%largeNumber == 0) {
     } else {
         largeNumber = largeNumber + 1
         lcmCalculation (largeNumber: largeNumber, smallNumber: smallNumber)
