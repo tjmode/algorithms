@@ -14,7 +14,6 @@ func findingLargeNumber (between numberOne: Int, and numberTwo: Int) -> Int {
 
 func findingLcm (for numberOne: Int, and numberTwo: Int, with largeNumber: Int) -> Int {
     var largeNumber = largeNumber
-    var answer = 0
     if (largeNumber % numberOne == 0) , (largeNumber % numberTwo == 0) {
         return largeNumber
     } else {
