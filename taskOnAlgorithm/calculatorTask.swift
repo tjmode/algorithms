@@ -198,27 +198,3 @@ func calculate (the expression: String) -> Double {
     return evaluatingPostFixIntoValue (from: postfixsArray)
 }
 print(calculate(the: expression))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
