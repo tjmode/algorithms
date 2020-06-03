@@ -5,7 +5,7 @@ output: Sorted arrayOfElements with minimum swap count, sum of difference of val
 */
 
 import Foundation
-func sortingarrayOfElementsWithMinimumSwap (arrayOfElements: [Int]) -> [Int] {
+func sortingWithMinimumSwap (in arrayOfElements: [Int]) -> [Int] {
     var arrayOfElements = arrayOfElements
     var swapCounter = 0
     for index in 0..<arrayOfElements.count {
@@ -20,7 +20,7 @@ func sortingarrayOfElementsWithMinimumSwap (arrayOfElements: [Int]) -> [Int] {
     }
     return arrayOfElements
 }
-func sumOfDiferenceBetweenGivenRange (arrayOfElements: [Int], indexNumber: Int) -> Int {
+func sumOfDiference(from indexNumber: Int, in arrayOfElements: [Int]) -> Int {
     var sumOfDiference = 0
     if arrayOfElements.count > indexNumber {
         for index in 0..<indexNumber {
@@ -30,6 +30,26 @@ func sumOfDiferenceBetweenGivenRange (arrayOfElements: [Int], indexNumber: Int) 
     return sumOfDiference
 }
 
-var sortedArrayOfElements = sortingarrayOfElementsWithMinimumSwap(arrayOfElements: [1,2,1,9])
+var sortedArrayOfElements = sortingWithMinimumSwap(in: [1,2,1,10])
 print(sortedArrayOfElements)
-sumOfDiferenceBetweenGivenRange(arrayOfElements: sortedArrayOfElements, indexNumber: 2)
+sumOfDiference(from: 2, in: sortedArrayOfElements)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
