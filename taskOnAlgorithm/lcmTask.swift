@@ -3,29 +3,26 @@ LCM of two number
 */
 
 import Foundation
-func largeAndSmallNumberFinder(numberOne: Int , numberTwo: Int) -> Int {
-    if numberOne <= numberTwo {
-       let largeNumber = numberTwo
-       let smallNumber = numberOne
-       return lcmCalculation(largeNumber: largeNumber, smallNumber: smallNumber)
+
+func findingLargeNumber (between numberOne: Int, and numberTwo: Int) -> Int {
+    if numberOne >= numberTwo {
+        return numberOne
     } else {
-       let largeNumber = numberOne
-       let smallNumber = numberTwo
-       return lcmCalculation(largeNumber: largeNumber, smallNumber: smallNumber)
+        return numberTwo
     }
 }
 
-func lcmCalculation (largeNumber: Int, smallNumber: Int) -> Int {
+func findingLcm (for numberOne: Int, and numberTwo: Int, with largeNumber: Int) -> Int {
     var largeNumber = largeNumber
-    if (largeNumber % largeNumber == 0) , (smallNumber%largeNumber == 0) {
+    var answer = 0
+    if (largeNumber % numberOne == 0) , (largeNumber % numberTwo == 0) {
+        return largeNumber
     } else {
-        largeNumber = largeNumber + 1
-        lcmCalculation (largeNumber: largeNumber, smallNumber: smallNumber)
+       return findingLcm (for : numberOne, and: numberTwo, with: largeNumber + 1)
     }
-     return largeNumber
 }
-func lcm (numberOne: Int, numberTwo: Int) -> Int{
-    let answer = largeAndSmallNumberFinder(numberOne: numberOne , numberTwo: numberTwo)
-    return answer
+
+func lcm (for numberOne: Int, and numberTwo: Int) -> Int{
+    return findingLcm (for: numberOne, and: numberTwo, with: (findingLargeNumber(between: numberOne, and: numberTwo)))
 }
-print(lcm(numberOne: 2, numberTwo: 4))
+print(lcm(for: 1, and: 1))
