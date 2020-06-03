@@ -19,8 +19,7 @@ func addingMultiplicationSymbolInBetweenBracket (in expression: String) -> Strin
     var perviousOfEach = ""
     for each in Array(expression) {
         if each == "(" {
-            let number = Int(perviousOfEach) ?? 12421
-            if number != 12421 {
+            if let number = Int(perviousOfEach) {
                 expression = expression.replacingFirstOccurrence(of:  "\(number)(", with: "\(number)*(")
             }
         }
