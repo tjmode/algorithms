@@ -1,10 +1,10 @@
 import Foundation
 /*
 Create a simple calculator and calculate the values based on the order of precedence
-Input will be string (e.g., "(2*39)+(63*58)"
-output: 3732.0 
+Input will be string (e.g., "(2*39)(65.3*58.3)+2"
+output: 296947.22
 */
-let expression = "(1+1)(3+2)"
+let expression = "(2*39)(65.3*58.3)+2"
 
 extension String {
     func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
@@ -13,23 +13,23 @@ extension String {
     }
 }
 
-func bracketToMultiplication (expression: String) -> String{
+func addingMultiplicationSymbolInBetweenBracket (in expression: String) -> String{
     var expression = expression.replacingOccurrences(of:  " ", with: "")
     expression = expression.replacingOccurrences(of:  ")(", with: ")*(")
-    var tempCatch = "w"
-    for of in Array(expression) {
-        if of == "(" {
-            let number = Int(tempCatch) ?? 12421
+    var perviousOfEach = ""
+    for each in Array(expression) {
+        if each == "(" {
+            let number = Int(perviousOfEach) ?? 12421
             if number != 12421 {
                 expression = expression.replacingFirstOccurrence(of:  "\(number)(", with: "\(number)*(")
             }
         }
-        tempCatch = String(of)
+        perviousOfEach = String(each)
     }
     return expression
 }
 
-func calculationForOperator(operators: String, firstOperand: Double, secondOperand: Double) -> Double {
+func calculationFor(operators: String, firstOperand: Double, secondOperand: Double) -> Double {
     switch operators {
         case "+" :
             return firstOperand + secondOperand
@@ -44,29 +44,29 @@ func calculationForOperator(operators: String, firstOperand: Double, secondOpera
     }
 }
 
-func postfixEvaluateValue (postfixsArray: [String]) -> Double {
+func evaluatingPostFixIntoValue (from postfixsArray: [String]) -> Double {
     let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0]
     var stack = [Double]()
-    for expression in postfixsArray {
-        if symbolDic[expression] != nil {
+    for eachExpression in postfixsArray {
+        if symbolDic[eachExpression] != nil {
             if stack.count == 1 {
-                let answer = calculationForOperator(operators: expression , firstOperand: symbolDic[expression] as! Double, secondOperand: stack[stack.count - 1]) 
+                let answer = calculationFor(operators: eachExpression , firstOperand: symbolDic[eachExpression] as! Double, secondOperand: stack[stack.count - 1]) 
                stack.removeLast()
                stack.insert(answer, at: stack.endIndex)
              } else {
-                let answer = calculationForOperator(operators: expression , firstOperand: stack[stack.count - 2], secondOperand: stack[stack.count - 1])
+                let answer = calculationFor(operators: eachExpression , firstOperand: stack[stack.count - 2], secondOperand: stack[stack.count - 1])
                stack.removeLast()
                stack.removeLast()
                stack.insert(answer, at: stack.endIndex)
              }
        } else {
-         stack.append(Double(expression) as! Double)
+         stack.append(Double(eachExpression) as! Double)
        }
    }
     return stack[0]
 }
 
-func infixToPostfixArray (expressionArray: [String]) -> [String] {
+func creatingPostFixArray (from expressionArray: [String]) -> [String] {
     let symbolDic = ["+": 1, "-": 1, "*": 2, "/": 2]
     var stack = [String]()
     var operators = [String]()
@@ -85,12 +85,12 @@ func infixToPostfixArray (expressionArray: [String]) -> [String] {
             if stack[stack.count - 1 ] != "(" {
                 let tempOpenBracketIndex = openBracketIndex[openBracketIndex.count - 1]
                 var tempArray = stack[tempOpenBracketIndex...stackIndex - 1]
-                var tempSquareArray : [String] = Array(tempArray.reversed())
+                var secondTempArray : [String] = Array(tempArray.reversed())
                 for removingIndex in (tempOpenBracketIndex - 1)...(stackIndex - 1){
                     var a = stack.remove(at: tempOpenBracketIndex - 1)
                     stackIndex -= 1
                }
-               operators = operators + tempSquareArray
+               operators = operators + secondTempArray
                openBracketIndex.removeLast()
             } else {
                 stack.removeLast()
@@ -105,19 +105,19 @@ func infixToPostfixArray (expressionArray: [String]) -> [String] {
                  stackIndex += 1
                  lastWieght = symbolDic[each] as! Int
              } else  {
-                 var doneMessage = 1
-                while doneMessage == 1 {
+                 var flag = 1
+                while flag == 1 {
                     if currectWieght != lastWieght , currectWieght > lastWieght  {
                         stack.append(each)
                         stackIndex += 1
                         lastWieght = symbolDic[each] as! Int
-                        doneMessage = 0
+                        flag = 0
                     } else if  currectWieght == lastWieght || currectWieght < lastWieght {
                         if stack[stack.count - 1] == "(" {
                             stack.append(each)
                             stackIndex += 1
                             lastWieght = -1
-                            doneMessage = 0
+                            flag = 0
                         } else {
                             let transfer = stack.removeLast()
                             operators.append(transfer)
@@ -132,7 +132,7 @@ func infixToPostfixArray (expressionArray: [String]) -> [String] {
                             } else {
                                 lastWieght = -1 
                             }
-                            doneMessage = 0
+                            flag = 0
                         }
                     }
                 }
@@ -145,7 +145,7 @@ func infixToPostfixArray (expressionArray: [String]) -> [String] {
     return operators + stack
 }
 
-func floatMergingInExpressionArray (expressionArray: [String]) -> [String] {
+func floatPointMerging (in expressionArray: [String]) -> [String] {
     var expressionArray = expressionArray
     for eachDot in 0..<(expressionArray.lazy.filter{$0 == "."}.count){
        let indexOfPoint = expressionArray.index(of: ".") ?? 1
@@ -158,30 +158,30 @@ func floatMergingInExpressionArray (expressionArray: [String]) -> [String] {
     return expressionArray
 }
 
-func splitingExpressionIntoNumbersAndSymbols (expression: String) -> ([String],String) {
+func splitingNumbersAsStringArrayAndTempExpression (from expression: String) -> ([String],String) {
     var tempExpression = expression
-    var numbers = [String]()
+    var numbersAsStringArray = [String]()
     let decimalNumbers = expression.components(separatedBy: CharacterSet.decimalDigits.inverted)
     var indexOfDecimalNumbers = 0
     for each in decimalNumbers {
         if let number = Int(each) {
-            numbers.append(String(number))
+            numbersAsStringArray.append(String(number))
             tempExpression = tempExpression.replacingFirstOccurrence(of: "\(number)", with: "1")
             indexOfDecimalNumbers += 1
         }
 
     }
-    return (numbers,  tempExpression)
+    return (numbersAsStringArray,  tempExpression)
 }
 
-func convertExpressionArrayFromNumbersAndSymbols (numbers: [String], tempExpression: String) -> [String] {
-    var numbers = numbers
+func creatingExpressionArrayFrom (numbersAsStringArray: [String], tempExpression: String) -> [String] {
+    var numbersAsStringArray = numbersAsStringArray
     let tempExpressionArray = Array(tempExpression)
     var expressionArray = [String]()
     for each in tempExpressionArray {
         if each == "1" {
-            expressionArray.append("\(numbers[0])")
-            numbers.remove(at:0)
+            expressionArray.append("\(numbersAsStringArray[0])")
+            numbersAsStringArray.remove(at:0)
         } else {
             expressionArray.append("\(each)")
         } 
@@ -189,12 +189,36 @@ func convertExpressionArrayFromNumbersAndSymbols (numbers: [String], tempExpress
     return expressionArray
 }
 
-func calculateExpression (expression: String) -> Double {
-    let expression = bracketToMultiplication (expression: expression)
-    let answer = splitingExpressionIntoNumbersAndSymbols(expression: expression)
-    var expressionArray = convertExpressionArrayFromNumbersAndSymbols( numbers: answer.0, tempExpression: answer.1)
-    expressionArray = floatMergingInExpressionArray(expressionArray: expressionArray)
-    let postfixsArray = infixToPostfixArray(expressionArray: expressionArray)
-    return postfixEvaluateValue (postfixsArray: postfixsArray)
+func calculate (the expression: String) -> Double {
+    let expression = addingMultiplicationSymbolInBetweenBracket (in: expression)
+    let numbersAsStringArrayAndTemExpression = splitingNumbersAsStringArrayAndTempExpression(from: expression)
+    var expressionArray = creatingExpressionArrayFrom( numbersAsStringArray: numbersAsStringArrayAndTemExpression.0, tempExpression: numbersAsStringArrayAndTemExpression.1)
+    expressionArray = floatPointMerging(in : expressionArray)
+    let postfixsArray = creatingPostFixArray(from: expressionArray)
+    return evaluatingPostFixIntoValue (from: postfixsArray)
 }
-print(calculateExpression(expression: expression))
+print(calculate(the: expression))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
