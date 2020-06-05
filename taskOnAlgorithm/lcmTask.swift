@@ -4,7 +4,7 @@ LCM of two number
 
 import Foundation
 
-func findingLargeNumber (between numberOne: Int, and numberTwo: Int) -> Int {
+func findingLargeNumber (among numberOne: Int, and numberTwo: Int) -> Int {
     if numberOne >= numberTwo {
         return numberOne
     } else {
@@ -24,6 +24,6 @@ func findingLcm (for numberOne: Int, and numberTwo: Int, with largeNumber: Int) 
 }
 
 func lcm (for numberOne: Int, and numberTwo: Int) -> Int{
-    return findingLcm (for: numberOne, and: numberTwo, with: (findingLargeNumber(between: numberOne, and: numberTwo)))
+    return findingLcm (for: numberOne, and: numberTwo, with: (findingLargeNumber(among: numberOne, and: numberTwo)))
 }
 print(lcm(for: 1, and: 1))
