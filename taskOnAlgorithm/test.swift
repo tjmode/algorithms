@@ -1,6 +1,5 @@
 import Foundation
-
-let expressionArray = Array("(1+3-1)")
+let expressionArray = Array("(1*1(1+1))")
 var priorityDictionary = ["+": 1, "-": 1, "*":2, "/":2]
 var stackIndex = 0
 var openBracketIndex = -1
@@ -8,15 +7,23 @@ var currentWieght = 0
 var symbols = [String]()
 var postfixArray = [String]()
 var lastWeight = -1
+var temp = 0
 for each in expressionArray {
     if each == "(" {
         openBracketIndex = stackIndex
         lastWeight = -1
     } else if each == ")" {
         if symbols.count != 0 {
-            let tempArray = symbols[openBracketIndex...stackIndex]
+            temp = openBracketIndex
+            var tempArray = symbols[openBracketIndex..<stackIndex]
             lastWeight = -1
-            print(tempArray)
+            tempArray.reverse()
+            postfixArray = postfixArray + tempArray
+            for removingIndex in openBracketIndex..<(stackIndex){
+                var a = symbols.remove(at: openBracketIndex)
+                stackIndex -= 1
+            }
+            openBracketIndex = temp
         }
     } else if priorityDictionary[String(each)] != nil {
         currentWieght = priorityDictionary[String(each)] as! Int ?? 0
@@ -33,10 +40,12 @@ for each in expressionArray {
                 lastWeight = priorityDictionary[String(each)] as! Int ?? 0
                 flag = 1
             } else if  currentWieght == lastWeight || currentWieght < lastWeight {
+                print("YES")
                 let transfer = symbols.removeLast()
                 symbols.append(String(each))
                 postfixArray.append(transfer)
                 flag = 1
+                print(postfixArray)
             } else {
                 symbols.append(String(each))
                 stackIndex += 1
@@ -49,4 +58,4 @@ for each in expressionArray {
         postfixArray.append(String(each))
     }
 }
-
+print(postfixArray)
