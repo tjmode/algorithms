@@ -1,61 +1,50 @@
 import Foundation
-let expressionArray = Array("(1*1/4*2-2(1+3-8/4))")
-var priorityDictionary = ["+": 1, "-": 1, "*":2, "/":2]
-var stackIndex = 0
-var openBracketIndex = -1
-var currentWieght = 0
-var symbols = [String]()
+var openBracketIndex = [Int]()
+var stackIndex = -1
+var stack = [String]()
 var postfixArray = [String]()
-var lastWeight = -1
-var temp = 0
-for each in expressionArray {
-    if each == "(" {
-        openBracketIndex = stackIndex
-        lastWeight = -1
-    } else if each == ")" {
-        if symbols.count != 0 {
-            temp = openBracketIndex
-            var tempArray = symbols[openBracketIndex..<stackIndex]
-            lastWeight = -1
-            tempArray.reverse()
-            postfixArray = postfixArray + tempArray
-            for removingIndex in openBracketIndex..<(stackIndex){
-                var a = symbols.remove(at: openBracketIndex)
-                stackIndex -= 1
-            }
-            openBracketIndex = temp
-        }
-    } else if priorityDictionary[String(each)] != nil {
-        currentWieght = priorityDictionary[String(each)] as! Int ?? 0
-        var flag = 0
-      //  while flag == 0 {
-            if symbols.count == 0 {
-                symbols.append(String(each))
+var lastStackWieght = [Int]()
+var flag = 0
+let priorityDictionary = ["+": 1, "-": 1, "*":2, "/":2, "(": -1, ")": -1]
+func infixToPostfix (from expressionArray: [String]) -> [String] {
+    var expressionArray = expressionArray
+    for each in expressionArray {
+        if each == ")" {
+            openBracketIndex.append(stackIndex)
+            stackIndex += 1
+            expressionArray.removeFirst()
+        } else if each == "(" {
+        openBracketIndex.removeLast()
+        stackIndex -= 1
+        } else if priorityDictionary[each]! == nil {
+            if lastStackWieght.count == 0 {
+                stack.append(each)
                 stackIndex += 1
-                lastWeight = priorityDictionary[String(each)] as! Int ?? 0
-                flag = 1
-            } else if currentWieght != lastWeight , currentWieght > lastWeight {
-                symbols.append(String(each))
-                stackIndex += 1
-                lastWeight = priorityDictionary[String(each)] as! Int ?? 0
-                flag = 1
-            } else if  currentWieght == lastWeight || currentWieght < lastWeight {
-          
-                let transfer = symbols.removeLast()
-                symbols.append(String(each))
-                postfixArray.append(transfer)
-                flag = 1
+                lastStackWieght.append(priorityDictionary[each]!)
+                expressionArray.removeFirst(
             } else {
-                symbols.append(String(each))
+                if priorityDictionary[each]! == lastStackWieght[lastStackWieght.count - 1] || priorityDictionary[each]! < lastStackWieght[lastStackWieght.count - 1] {
+                   stackIndex -= 1
+                   expressionArray.removeFirst()
+                   postfixArray.append(stack.removeLast())
+                   infixToPostfix(from: expressionArray)
+                   flag = 1
+                } else {
+                stack.append(each)
                 stackIndex += 1
-                lastWeight = priorityDictionary[String(each)] as! Int ?? 0
-                flag = 1
+                expressionArray.removeFirst()
+                }
             }
-        //}
-
-    } else {
-        postfixArray.append(String(each))
+        } else {
+            postfixArray.append(each)
+        }
+        if flag == 1 { 
+            return infixToPostfix(from: expressionArray)
+        } else {
+            return postfixArray + (stack.reversed())
+        } 
     }
 }
-print(postfixArray)
-print(symbols)
+print(infixToPostfix(from: ["2", "*", "(", "-", "5", ")", "+", "6"]))
+
+
