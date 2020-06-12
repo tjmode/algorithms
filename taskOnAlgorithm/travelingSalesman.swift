@@ -5,9 +5,14 @@ var counter = -1
 var indexCounter = -1
 var nodeSelectRange = 0
 var selectedNode = 0
+
 func selectRow (for index: Int) -> [Int] {
+    var index = index
     var row = [Int] ()
     for indexCount in 0..<tempDistanceMatrix.count {
+        if tempDistanceMatrix.count == 1 {
+            index = 0
+        }
         row.append(tempDistanceMatrix[indexCount][index])
     }
     return row
@@ -16,6 +21,7 @@ func selectRow (for index: Int) -> [Int] {
 func selectColumn (for index: Int) -> [Int] {
     return tempDistanceMatrix[index]
 }
+
 func smallValue(of array: [Int]) -> Int{
     var array = array
     if array.contains(-1) {
@@ -62,6 +68,7 @@ func deleteTempDistanceMatrix(for x: Int, and y: Int) -> Void {
 func findX(for array: [Int]) -> String {
     var x = "nil"
     if array.filter({$0 == 0}).count == 1 {
+
         x = "\(array.index(of: 0)as! Int ?? 0)"
     }
     return x
@@ -73,21 +80,38 @@ counter = -1
 indexCounter = -1
 rowReduction()
 tempDistanceMatrix = distanceMatrix
-print(tempDistanceMatrix)
+
 for index in 0..<tempDistanceMatrix.count {
   var tempX = findX(for: selectColumn(for: index))
   if let x = Int(tempX)  {
       deleteTempDistanceMatrix(for: x, and: index)
   }
 }
-print(tempDistanceMatrix)
-
-for index in 0..<tempDistanceMatrix.count {
-    var tempX = findX(for: selectRow(for: index)) 
-    if let x = Int(tempX) {
-        deleteTempDistanceMatrix(for: x, and: index)
+func nodeSelecting () -> Void {
+    for index in 0..<tempDistanceMatrix.count {
+        var tempX = findX(for: selectRow(for: index)) 
+        if let x = Int(tempX) {
+            if tempDistanceMatrix.count == 1 { 
+                deleteTempDistanceMatrix(for: x, and: 0)
+            } else { 
+                deleteTempDistanceMatrix(for: x, and: index)
+            }
+        }
     }
 }
-print(tempDistanceMatrix)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
