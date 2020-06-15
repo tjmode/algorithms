@@ -5,7 +5,7 @@ output: 296947.22
 */
 
 import Foundation
-let expression = "0.09"
+let expression = "-1+1(0.09 + 23)"
 let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0, "(": 1.0]
 extension String {
     func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
@@ -197,7 +197,7 @@ func positiveNegativeMerging (in expressionArray: [String]) -> [String] {
                 let symbols = expressionArray.remove(at: index)
                 expressionArray[0] = "\(symbols)\(expressionArray[0])"
                 index -= 1
-            } else if expressionArray[index + 1] == "(" {
+            } else if expressionArray[index + 1] == "(", symbolDic[expressionArray[index - 1]] != nil {
                 expressionArray[index] = "\(expressionArray[index])\(1)"
                 expressionArray.insert("*", at: index + 1) 
             } else {
