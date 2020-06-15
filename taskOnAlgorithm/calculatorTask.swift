@@ -1,11 +1,11 @@
-import Foundation
 /*
 Create a simple calculator and calculate the values based on the order of precedence
 Input will be string (e.g., "(2*39)(65.3*58.3)+2"
 output: 296947.22
 */
-let expression = "2*(-5)"
-let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0]
+import Foundation
+let expression = "-2(-1.09)"
+let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0, "(": 1.0]
 extension String {
     func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
         guard let range = self.range(of: target) else { return self }
@@ -145,8 +145,8 @@ func creatingPostFixArray (from expressionArray: [String]) -> [String] {
 
 func floatPointMerging (in expressionArray: [String]) -> [String] {
     var expressionArray = expressionArray
-    for eachDot in 0..<(expressionArray.lazy.filter{$0 == "."}.count){
-       let indexOfPoint = expressionArray.index(of: ".") ?? 1
+    for eachDot in 0..<(expressionArray.lazy.filter{$0 == "."}.count) {
+        let indexOfPoint = expressionArray.index(of: ".") ?? 1
         var floatValue = "\(expressionArray[indexOfPoint - 1]) \(expressionArray[indexOfPoint]) \(expressionArray[indexOfPoint + 1])"
         floatValue = floatValue.replacingOccurrences(of:  " ", with: "")
         expressionArray[indexOfPoint - 1] = floatValue
@@ -163,11 +163,10 @@ func splitingNumbersAsStringArrayAndTempExpression (from expression: String) -> 
     var indexOfDecimalNumbers = 0
     for each in decimalNumbers {
         if let number = Int(each) {
-            numbersAsStringArray.append(String(number))
-            tempExpression = tempExpression.replacingFirstOccurrence(of: "\(number)", with: "1")
+            numbersAsStringArray.append(String(each))
+            tempExpression = tempExpression.replacingFirstOccurrence(of: "\(each)", with: "1")
             indexOfDecimalNumbers += 1
         }
-
     }
     return (numbersAsStringArray,  tempExpression)
 }
@@ -188,15 +187,22 @@ func creatingExpressionArrayFrom (numbersAsStringArray: [String], tempExpression
 }
 func positiveNegativeMerging (in expressionArray: [String]) -> [String] {
     var expressionArray = expressionArray
-    for each in 0..<expressionArray.count {
-        if expressionArray[each] == "-" || expressionArray[each] == "+" {
-            if each == 0, symbolDic[expressionArray[each + 1]] == nil {
-                let symbols = expressionArray.removeFirst()
+    var index = -1
+    for each in 0..<expressionArray.count - 1{
+        index += 1
+        if expressionArray[index] == "-" || expressionArray[index] == "+" {
+            if index == 0, symbolDic[expressionArray[index + 1]] == nil {
+                let symbols = expressionArray.remove(at: index)
                 expressionArray[0] = "\(symbols)\(expressionArray[0])"
+                index -= 1
+            } else if expressionArray[index + 1] == "(" {
+                expressionArray[index] = "\(expressionArray[index])\(1)"
+                expressionArray.insert("*", at: index + 1) 
             } else {
-                if symbolDic[expressionArray[each - 1]] != nil, symbolDic[expressionArray[each + 1]] == nil {
-                    let symbols = expressionArray.remove(at: each)
-                    expressionArray[each] = "\(symbols)\(expressionArray[each + 1])"
+                if symbolDic[expressionArray[index - 1]] != nil, symbolDic[expressionArray[index + 1]] == nil {
+                    let symbols = expressionArray.remove(at: index)
+                    expressionArray[index] = "\(symbols)\(expressionArray[index])"
+                    index -= 1
                 }
             }
             }
@@ -209,10 +215,8 @@ func calculate (the expression: String) -> Double {
     let numbersAsStringArrayAndTemExpression = splitingNumbersAsStringArrayAndTempExpression(from: expression)
     var expressionArray = creatingExpressionArrayFrom( numbersAsStringArray: numbersAsStringArrayAndTemExpression.0, tempExpression: numbersAsStringArrayAndTemExpression.1)
     expressionArray = positiveNegativeMerging(in: expressionArray)
-    print(expressionArray)
-    // expressionArray = floatPointMerging(in : expressionArray)
-    // let postfixsArray = creatingPostFixArray(from: expressionArray)
-    // return evaluatingPostFixIntoValue (from: postfixsArray)
-    return 0.0
+    expressionArray = floatPointMerging(in : expressionArray)
+    let postfixsArray = creatingPostFixArray(from: expressionArray)
+    return evaluatingPostFixIntoValue (from: postfixsArray)
 }
 print(calculate(the: expression))
