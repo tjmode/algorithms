@@ -3,8 +3,9 @@ Create a simple calculator and calculate the values based on the order of preced
 Input will be string (e.g., "(2*39)(65.3*58.3)+2"
 output: 296947.22
 */
+
 import Foundation
-let expression = "-2(-1.09)"
+let expression = "0.09"
 let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0, "(": 1.0]
 extension String {
     func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
@@ -185,6 +186,7 @@ func creatingExpressionArrayFrom (numbersAsStringArray: [String], tempExpression
     }
     return expressionArray
 }
+
 func positiveNegativeMerging (in expressionArray: [String]) -> [String] {
     var expressionArray = expressionArray
     var index = -1
@@ -205,10 +207,10 @@ func positiveNegativeMerging (in expressionArray: [String]) -> [String] {
                     index -= 1
                 }
             }
-            }
         }
-        return expressionArray
     }
+    return expressionArray
+}
 
 func calculate (the expression: String) -> Double {
     let expression = addingMultiplicationSymbolInBetweenBracket (in: expression)
