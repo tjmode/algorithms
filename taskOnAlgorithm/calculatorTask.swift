@@ -5,8 +5,10 @@ output: 296947.22
 */
 
 import Foundation
-let expression = "-1+1(0.09 + 23)"
+let expression = "-12.7+12.6"
 let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0, "(": 1.0]
+var roundOfSize = [Int]()
+
 extension String {
     func replacingFirstOccurrence(of target: String, with replacement: String) -> String {
         guard let range = self.range(of: target) else { return self }
@@ -26,10 +28,22 @@ func addingMultiplicationSymbolInBetweenBracket (in expression: String) -> Strin
         }
         perviousOfEach = String(each)
     }
+    var index = -1
+    var tempArray = Array(expression)
+    for each in tempArray {
+        index += 1
+        if each == ")" {
+            if tempArray.count - 1 != index {
+                if symbolDic["\(tempArray[index + 1])"] == nil || tempArray[index + 1] == "(" {
+                    expression = expression.replacingFirstOccurrence(of:  ")", with: ")*")
+                }
+            } 
+        }
+    }
     return expression
 }
 
-func calculationFor(operators: String, firstOperand: Double, secondOperand: Double) -> Double {
+func calculationFor(operators: String, firstOperand: Float, secondOperand: Float) -> Float {
     switch operators {
         case "+" :
             return firstOperand + secondOperand
@@ -44,12 +58,12 @@ func calculationFor(operators: String, firstOperand: Double, secondOperand: Doub
     }
 }
 
-func evaluatingPostFixIntoValue (from postfixsArray: [String]) -> Double {
-    var stack = [Double]()
+func evaluatingPostFixIntoValue (from postfixsArray: [String]) -> Float {
+    var stack = [Float]()
     for eachExpression in postfixsArray {
         if symbolDic[eachExpression] != nil {
             if stack.count == 1 {
-                let answer = calculationFor(operators: eachExpression , firstOperand: symbolDic[eachExpression] as! Double, secondOperand: stack[stack.count - 1]) 
+                let answer = calculationFor(operators: eachExpression , firstOperand: symbolDic[eachExpression] as! Float, secondOperand: stack[stack.count - 1]) 
                stack.removeLast()
                stack.insert(answer, at: stack.endIndex)
              } else {
@@ -59,7 +73,7 @@ func evaluatingPostFixIntoValue (from postfixsArray: [String]) -> Double {
                stack.insert(answer, at: stack.endIndex)
              }
        } else {
-         stack.append(Double(eachExpression) as! Double)
+         stack.append(Float(eachExpression) as! Float)
        }
    }
     return stack[0]
@@ -148,12 +162,22 @@ func floatPointMerging (in expressionArray: [String]) -> [String] {
     var expressionArray = expressionArray
     for eachDot in 0..<(expressionArray.lazy.filter{$0 == "."}.count) {
         let indexOfPoint = expressionArray.index(of: ".") ?? 1
-        var floatValue = "\(expressionArray[indexOfPoint - 1]) \(expressionArray[indexOfPoint]) \(expressionArray[indexOfPoint + 1])"
-        floatValue = floatValue.replacingOccurrences(of:  " ", with: "")
-        expressionArray[indexOfPoint - 1] = floatValue
-        expressionArray.remove(at: indexOfPoint)
-        expressionArray.remove(at: indexOfPoint)
+        if indexOfPoint == 0 {
+            expressionArray[0] = "0.\(expressionArray[indexOfPoint + 1])"
+        } else if symbolDic[expressionArray[indexOfPoint - 1]] != nil || expressionArray[indexOfPoint - 1] == ")" {
+            expressionArray[indexOfPoint] = "0.\(expressionArray[indexOfPoint + 1])"
+            roundOfSize.append(Array(expressionArray[indexOfPoint + 1]).count)
+            expressionArray.remove(at: indexOfPoint + 1)
+        } else {
+            var floatValue = "\(expressionArray[indexOfPoint - 1]) \(expressionArray[indexOfPoint]) \(expressionArray[indexOfPoint + 1])"
+            floatValue = floatValue.replacingOccurrences(of:  " ", with: "")
+            roundOfSize.append(Array(expressionArray[indexOfPoint + 1]).count)
+            expressionArray[indexOfPoint - 1] = floatValue
+            expressionArray.remove(at: indexOfPoint)
+            expressionArray.remove(at: indexOfPoint)
+        }
     }
+    print(expressionArray)
     return expressionArray
 }
 
@@ -212,13 +236,24 @@ func positiveNegativeMerging (in expressionArray: [String]) -> [String] {
     return expressionArray
 }
 
-func calculate (the expression: String) -> Double {
+func roundOf(value: Float) -> Float {
+    let temp = roundOfSize.max() as! Int ?? 0
+    var size = 1.0
+    for i in 0...temp{
+        size = size * 10.0
+    }
+    return round((Float(size) * Float(value))) / Float(size)
+}
+
+func calculate (the expression: String) -> Float {
     let expression = addingMultiplicationSymbolInBetweenBracket (in: expression)
     let numbersAsStringArrayAndTemExpression = splitingNumbersAsStringArrayAndTempExpression(from: expression)
     var expressionArray = creatingExpressionArrayFrom( numbersAsStringArray: numbersAsStringArrayAndTemExpression.0, tempExpression: numbersAsStringArrayAndTemExpression.1)
     expressionArray = positiveNegativeMerging(in: expressionArray)
     expressionArray = floatPointMerging(in : expressionArray)
     let postfixsArray = creatingPostFixArray(from: expressionArray)
-    return evaluatingPostFixIntoValue (from: postfixsArray)
+    return roundOf(value: evaluatingPostFixIntoValue (from: postfixsArray))
 }
 print(calculate(the: expression))
+
+
