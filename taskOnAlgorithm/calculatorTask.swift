@@ -1,3 +1,4 @@
+
 /*
 Create a simple calculator and calculate the values based on the order of precedence
 Input will be string (e.g., "(2*39)(65.3*58.3)+2"
@@ -5,8 +6,8 @@ output: 296947.22
 */
 
 import Foundation
-let expression = "-12.7+12.6"
-let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0, "(": 1.0]
+let expression = "10+12-2"
+let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0]
 var roundOfSize = [Int]()
 
 extension String {
@@ -177,7 +178,6 @@ func floatPointMerging (in expressionArray: [String]) -> [String] {
             expressionArray.remove(at: indexOfPoint)
         }
     }
-    print(expressionArray)
     return expressionArray
 }
 
@@ -214,13 +214,17 @@ func creatingExpressionArrayFrom (numbersAsStringArray: [String], tempExpression
 func positiveNegativeMerging (in expressionArray: [String]) -> [String] {
     var expressionArray = expressionArray
     var index = -1
-    for each in 0..<expressionArray.count - 1{
+    for each in 0..<expressionArray.count - 1 {
         index += 1
         if expressionArray[index] == "-" || expressionArray[index] == "+" {
-            if index == 0, symbolDic[expressionArray[index + 1]] == nil {
-                let symbols = expressionArray.remove(at: index)
-                expressionArray[0] = "\(symbols)\(expressionArray[0])"
-                index -= 1
+            if index == 0 {
+                if expressionArray[index + 1] == "(" {
+                    expressionArray[index] = "\(expressionArray[index])1"
+                    expressionArray.insert("*", at: index + 1)
+                } else if symbolDic[expressionArray[index + 1]] == nil {
+                    expressionArray[0] = "\(expressionArray[index])\(expressionArray[index + 1])"
+                    expressionArray.remove(at: index + 1)
+                }
             } else if expressionArray[index + 1] == "(", symbolDic[expressionArray[index - 1]] != nil {
                 expressionArray[index] = "\(expressionArray[index])\(1)"
                 expressionArray.insert("*", at: index + 1) 
@@ -237,23 +241,41 @@ func positiveNegativeMerging (in expressionArray: [String]) -> [String] {
 }
 
 func roundOf(value: Float) -> Float {
-    let temp = roundOfSize.max() as! Int ?? 0
-    var size = 1.0
-    for i in 0...temp{
-        size = size * 10.0
+    if roundOfSize.count != 0 {
+        let temp = roundOfSize.max() as! Int ?? 0
+        var size = 1.0
+        for i in 0...temp{
+            size = size * 10.0
+        }
+        return round((Float(size) * Float(value))) / Float(size)
+    } else {
+        return value
     }
-    return round((Float(size) * Float(value))) / Float(size)
 }
-
+func validation(for expressionArray) -> Void {
+    var bracket = [String]()
+    var ans = 0
+    for each in expressionArray {
+        if each == "(" {
+            bracket.append(each)
+        } else if each == ")" {
+            if bracket.count != 0 {
+                bracket.removeLast()
+            } else {
+                ans = -1 
+            }
+        }
+    }
+}
 func calculate (the expression: String) -> Float {
     let expression = addingMultiplicationSymbolInBetweenBracket (in: expression)
     let numbersAsStringArrayAndTemExpression = splitingNumbersAsStringArrayAndTempExpression(from: expression)
     var expressionArray = creatingExpressionArrayFrom( numbersAsStringArray: numbersAsStringArrayAndTemExpression.0, tempExpression: numbersAsStringArrayAndTemExpression.1)
     expressionArray = positiveNegativeMerging(in: expressionArray)
     expressionArray = floatPointMerging(in : expressionArray)
+    validation(for: expressionArray)
     let postfixsArray = creatingPostFixArray(from: expressionArray)
+    evaluatingPostFixIntoValue (from: postfixsArray)
     return roundOf(value: evaluatingPostFixIntoValue (from: postfixsArray))
 }
 print(calculate(the: expression))
-
-
