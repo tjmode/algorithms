@@ -1,4 +1,3 @@
-
 /*
 Create a simple calculator and calculate the values based on the order of precedence
 Input will be string (e.g., "(2*39)(65.3*58.3)+2"
@@ -6,7 +5,7 @@ output: 296947.22
 */
 
 import Foundation
-let expression = "10+12-2"
+let expression = ""
 let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0]
 var roundOfSize = [Int]()
 
@@ -252,19 +251,11 @@ func roundOf(value: Float) -> Float {
         return value
     }
 }
-func validation(for expressionArray) -> Void {
-    var bracket = [String]()
-    var ans = 0
-    for each in expressionArray {
-        if each == "(" {
-            bracket.append(each)
-        } else if each == ")" {
-            if bracket.count != 0 {
-                bracket.removeLast()
-            } else {
-                ans = -1 
-            }
-        }
+func validation(for expressionArray: [String]) -> Int {
+    if expressionArray.count % 2 == 0 {
+        return -1
+    } else {
+        return 0
     }
 }
 func calculate (the expression: String) -> Float {
@@ -273,9 +264,13 @@ func calculate (the expression: String) -> Float {
     var expressionArray = creatingExpressionArrayFrom( numbersAsStringArray: numbersAsStringArrayAndTemExpression.0, tempExpression: numbersAsStringArrayAndTemExpression.1)
     expressionArray = positiveNegativeMerging(in: expressionArray)
     expressionArray = floatPointMerging(in : expressionArray)
-    validation(for: expressionArray)
-    let postfixsArray = creatingPostFixArray(from: expressionArray)
-    evaluatingPostFixIntoValue (from: postfixsArray)
-    return roundOf(value: evaluatingPostFixIntoValue (from: postfixsArray))
+    let validateAnswer = validation(for: expressionArray)
+    if validateAnswer == -1 {
+        return -1
+    } else {
+        let postfixsArray = creatingPostFixArray(from: expressionArray)
+        evaluatingPostFixIntoValue (from: postfixsArray)
+        return roundOf(value: evaluatingPostFixIntoValue (from: postfixsArray))
+    }
 }
 print(calculate(the: expression))
