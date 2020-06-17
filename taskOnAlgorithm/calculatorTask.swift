@@ -5,7 +5,7 @@ output: 296947.22
 */
 
 import Foundation
-let expression = "-1 +"
+let expression = ""
 let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0]
 var roundOfSize = [Int]()
 
@@ -229,11 +229,15 @@ func positiveNegativeblend (in expressionArray: [String]) -> [String] {
             } else if(expressionArray.count - 1) > index {
                 if expressionArray[index + 1] == "(", symbolDic[expressionArray[index - 1]] != nil {
                     expressionArray[index] = "\(expressionArray[index])\(1)"
-                    expressionArray.insert("*", at: index + 1) 
+                    expressionArray.insert("*", at: index + 1)
                 } else if symbolDic[expressionArray[index - 1]] != nil, symbolDic[expressionArray[index + 1]] == nil {
                     let symbols = expressionArray.remove(at: index)
                     expressionArray[index] = "\(symbols)\(expressionArray[index])"
                     index -= 1
+                } else if expressionArray[index - 1] == "(", symbolDic[expressionArray[index + 1]] == nil{
+                   let symbols = expressionArray.remove(at: index)
+                   expressionArray[index] = "\(symbols)\(expressionArray[index])"
+                   index -= 1
                 }
             }
         }
@@ -255,6 +259,7 @@ func roundOf(value: Float) -> Float {
 }
 func validation(for expressionArray: [String]) -> Int {
     if expressionArray.count % 2 == 0 {
+        print(expressionArray)
         return -1
     } else {
         return 0
