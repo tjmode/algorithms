@@ -5,7 +5,7 @@ output: 296947.22
 */
 
 import Foundation
-let expression = ""
+let expression = "(1+28+1)1"
 let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0]
 var roundOfSize = [Int]()
 
@@ -258,12 +258,25 @@ func roundOf(value: Float) -> Float {
     }
 }
 func validation(for expressionArray: [String]) -> Int {
-    if expressionArray.count % 2 == 0 {
-        print(expressionArray)
-        return -1
-    } else {
-        return 0
+    var bool = 0
+    var stack = [String]()
+    for each in expressionArray {
+        if let number = Float(each) {
+            stack.append(each)
+        } else if each == "(" {
+            stack.append(each)
+        } else {
+            if stack.count == 0 {
+                bool = -1
+            } else {
+                stack.removeLast()
+            }
+        }
     }
+    if stack.count == 0 {
+        bool = -1
+    }
+    return bool
 }
 func calculate (the expression: String) -> Float {
    if expression != "" {
@@ -284,9 +297,4 @@ func calculate (the expression: String) -> Float {
    }
    return 0
 }
-do {
-    var answer = try (calculate(the: expression))
-    print(answer)
-} catch {
-    print("-1")
-}
+print(calculate(the: expression))
