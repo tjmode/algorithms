@@ -5,7 +5,7 @@ output: 296947.22
 */
 
 import Foundation
-let expression = "(1+28+1)1"
+let expression = "(1+28+1)1*1(2)"
 let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0]
 var roundOfSize = [Int]()
 
