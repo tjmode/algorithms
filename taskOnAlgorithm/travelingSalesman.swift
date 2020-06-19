@@ -1,5 +1,5 @@
 import Foundation
-var distanceMatrix = [[-1, 2, 3, 2],[2, -1, 2, 3],[1, 0, -1, 3]]
+var distanceMatrix = [[-1, 2, 3, 2],[2, -1, 2, 3],[1, 0, -1, 3],[1,2,3,-1]]
 var tempDistanceMatrix = distanceMatrix
 var counter = -1 
 var indexCounter = -1
@@ -81,15 +81,24 @@ indexCounter = -1
 rowReduction()
 tempDistanceMatrix = distanceMatrix
 
-for index in 0..<tempDistanceMatrix.count {
-  var tempX = findX(for: selectColumn(for: index))
-  if let x = Int(tempX)  {
+func nodeSelect() {
+    var tempX = ""    
+for index in 0..<tempDistanceMatrix.count - 1 {
+    if tempDistanceMatrix.count == 1 {
+        tempX = findX(for: selectColumn(for: 0))
+    } else {
+        tempX = findX(for: selectColumn(for: index))
+    }
+    if let x = Int(tempX)  {
       deleteTempDistanceMatrix(for: x, and: index)
   }
 }
-
     for index in 0..<tempDistanceMatrix.count {
-        var tempX = findX(for: selectRow(for: index)) 
+        if tempDistanceMatrix.count == 1 { 
+            tempX = findX(for: selectRow(for: 0))
+        } else {
+            tempX = findX(for: selectRow(for: index))
+        }
         if let x = Int(tempX) {
             if tempDistanceMatrix.count == 1 { 
                 deleteTempDistanceMatrix(for: x, and: 0)
@@ -97,5 +106,8 @@ for index in 0..<tempDistanceMatrix.count {
                 deleteTempDistanceMatrix(for: x, and: index)
             }
         }
-    }
-print(selectedNode)
+    } 
+}
+nodeSelect()
+nodeSelect()
+
