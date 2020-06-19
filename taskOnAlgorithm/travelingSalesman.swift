@@ -1,5 +1,5 @@
 import Foundation
-var distanceMatrix = [[-1, 2, 3],[2, -1, 3],[1, 2, -1]]
+var distanceMatrix = [[-1, 2, 3, 2],[2, -1, 2, 3],[1, 0, -1, 3]]
 var tempDistanceMatrix = distanceMatrix
 var counter = -1 
 var indexCounter = -1
@@ -68,7 +68,7 @@ func deleteTempDistanceMatrix(for x: Int, and y: Int) -> Void {
 func findX(for array: [Int]) -> String {
     var x = "nil"
     if array.filter({$0 == 0}).count == 1 {
-
+        selectedNode += 1
         x = "\(array.index(of: 0)as! Int ?? 0)"
     }
     return x
@@ -87,7 +87,7 @@ for index in 0..<tempDistanceMatrix.count {
       deleteTempDistanceMatrix(for: x, and: index)
   }
 }
-func nodeSelecting () -> Void {
+
     for index in 0..<tempDistanceMatrix.count {
         var tempX = findX(for: selectRow(for: index)) 
         if let x = Int(tempX) {
@@ -98,20 +98,4 @@ func nodeSelecting () -> Void {
             }
         }
     }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+print(selectedNode)
