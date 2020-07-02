@@ -5,7 +5,7 @@ output: 296947.22
 */
 
 import Foundation
-let expression = "(1+28+1)1*1(2)"
+let expression = "-2(-1.09)"
 let symbolDic = ["+": 0.0, "-": 0.0, "*": 1.0, "/": 1.0]
 var roundOfSize = [Int]()
 
@@ -165,11 +165,17 @@ func floatPointblend (in expressionArray: [String]) -> [String] {
     for eachDot in 0..<(expressionArray.lazy.filter{$0 == "."}.count) {
         let indexOfPoint = expressionArray.index(of: ".") ?? 1
         if indexOfPoint == 0 {
-            expressionArray[0] = "0.\(expressionArray[indexOfPoint + 1])"
+            expressionArray.remove(at: 0)
+            expressionArray[0] = "0.\(expressionArray[indexOfPoint])"
         } else if symbolDic[expressionArray[indexOfPoint - 1]] != nil || expressionArray[indexOfPoint - 1] == ")" {
+            
             expressionArray[indexOfPoint] = "0.\(expressionArray[indexOfPoint + 1])"
             roundOfSize.append(Array(expressionArray[indexOfPoint + 1]).count)
             expressionArray.remove(at: indexOfPoint + 1)
+
+        } else if expressionArray[indexOfPoint-1] == "(" {
+            expressionArray[indexOfPoint+1] = "0.\(expressionArray[indexOfPoint+1])"
+            expressionArray.remove(at: indexOfPoint)
         } else {
             var floatValue = "\(expressionArray[indexOfPoint - 1]) \(expressionArray[indexOfPoint]) \(expressionArray[indexOfPoint + 1])"
             floatValue = floatValue.replacingOccurrences(of:  " ", with: "")
@@ -287,8 +293,8 @@ func calculate (the expression: String) -> Float {
         expressionArray = floatPointblend(in : expressionArray)
         let validateAnswer = validation(for: expressionArray)
         if validateAnswer == -1 {
-            print("invalid")
-            return -1
+            print("invalid for give \(expression)")
+            return 0
         } else {
             let postfixsArray = creatingPostFixArray(from: expressionArray)
             evaluatingPostFixIntoValue (from: postfixsArray)
